@@ -1,0 +1,18 @@
+[Unit]
+Description=Atlassian Bamboo Agent
+After=syslog.target network.target
+StartLimitInterval=200
+StartLimitBurst=10
+
+[Service]
+Restart=always
+RestartSec=30
+Type=forking
+User=username
+Group=groupname
+ExecStartPre=-/usr/bin/sudo /opt/scripts/ship-network.sh start
+ExecStart=/bin/bash -l -c 'exec "$@"' _ /home/username/bamboo-agent-home/bin/bamboo-agent.sh start
+ExecStop=/bin/bash -l -c 'exec "$@"' _ /home/username/bamboo-agent-home/bin/bamboo-agent.sh stop
+
+[Install]
+WantedBy=multi-user.target
